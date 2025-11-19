@@ -15,29 +15,18 @@
  */
 
 locals {
-  export_filter   = var.export_filter != "" ? var.export_filter : jsondecode(data.local_file.filter.content).filter
+  export_filter   = var.export_filter != "" ? var.export_filter : data.template_file.filter.rendered
   machine_project = var.machine_project != "" ? var.machine_project : var.project_id
 }
 
 #------#
 # Data #
 #------#
-resource "null_resource" "compute_filter" {
-  triggers = {
-    project_id   = var.project_id
-    applications = join(" ", var.applications)
-  }
-
-  provisioner "local-exec" {
-    command = "python ${path.module}/scripts/get_logsink_filter.py ${var.project_id} '${join(" ", var.applications)}'"
-    interpreter = ["/bin/bash", "-c"]
-    working_dir = path.module
-  }
-}
-
-data "local_file" "filter" {
-  filename = "${path.module}/filter.json"
-  depends_on = [null_resource.compute_filter]
+data "template_file" "filter" {
+  template = join(" OR ", [
+    for app in var.applications :
+    "logName:projects/${var.project_id}/logs/${app}"
+  ])
 }
 
 data "template_file" "gsuite_exporter" {
