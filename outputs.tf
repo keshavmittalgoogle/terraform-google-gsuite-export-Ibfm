@@ -24,7 +24,7 @@ output "instance_name" {
   description = "GSuite Exporter instance name"
 }
 
-output "instance_zone" {
+output "zone" {
   value       = google_compute_instance.gsuite_exporter_vm.zone
   description = "GSuite Exporter instance zone"
 }
