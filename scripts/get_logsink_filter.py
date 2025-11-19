@@ -30,8 +30,8 @@ def main(project, apps):
 
     # Print output
     data = {'filter': filter}
-    out_json = json.dumps(data)
-    sys.stdout.write(out_json)
+    with open('filter.json', 'w') as f:
+        json.dump(data, f)
 
 
 if __name__ == '__main__':
