@@ -24,7 +24,7 @@ terraform {
     }
     external = {
       source  = "hashicorp/external"
-      version = ">= 1.1.0"
+      version = "2.2.0"
     }
     template = {
       source  = "hashicorp/template"
